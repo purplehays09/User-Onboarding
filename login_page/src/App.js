@@ -1,29 +1,37 @@
 import React, { useState, useEffect } from 'react'
+import axios from "axios";
 import './App.css';
+import * as yup from 'yup'
+import formSchema from './validation/formSchema'
+import Form from './form'
+
 
 
 
 const initialFormValues = {
   name: '',
-  email: '',
+  email:'',
   password: '',
-  terms: '',
+  terms: false,
 
 }
 const initialFormErrors = {
-  username: '',
-  email: '',
-  role: '',
-  civil: '',
+  name: '',
+  email:'',
+  password: '',
+  terms: false
 }
+
+const initialFriends = []
+const initialDisabled = true
 
 
 function App() {
 
-  const [friends, setFriends] = useState('initialFriends')          // array of friend objects
-  const [formValues, setFormValues] = useState(initialFormValues) // object
-  const [formErrors, setFormErrors] = useState(initialFormErrors) // object
-  const [disabled, setDisabled] = useState('initialDisabled')       // boolean
+  const [friends, setFriends] = useState(initialFriends)         
+  const [formValues, setFormValues] = useState(initialFormValues) 
+  const [formErrors, setFormErrors] = useState(initialFormErrors) 
+  const [disabled, setDisabled] = useState(initialDisabled)       
 
 
   const postForm = newFriend => {
@@ -40,65 +48,72 @@ function App() {
       })
   }
 
+  const inputChange = (name, value) => {
+    yup
+      .reach(formSchema, name)
+      .validate(value)
+      .then(valid => {
+        setFormErrors({
+          ...formErrors,
+          [name]: ""
+        });
+      })
+
+      .catch(err => {
+        setFormErrors({
+          ...formErrors,
+          [name]: err.errors[0]
+        });
+    });
+
+    setFormValues({
+      ...formValues,
+      [name]: value 
+    })
+  }
+
+  const checkboxChange = (name, isChecked) => {
+
+    setFormValues({
+      ...formValues,
+      terms: !formValues.terms
+    })
+  }
+
+  const submit = () => {
+    const filledForm = {
+      firstName: formValues.firstName.trim(),
+      lastName: formValues.lastName.trim(),
+      email: formValues.email.trim(),
+      password: formValues.password.trim(),
+      terms: formValues.terms.accepted,
+    }
+  
+    postForm(filledForm)
+  }
+
+
+  useEffect(() => {
+      formSchema.isValid(formValues)
+        .then(valid => {
+          setDisabled(!valid)
+        })
+    }, [formValues])
+
+  //-----------------------------------------------------------
+
   return (
-    <div className="App" style='display=flex '>
+    <div className="App">
+      <Form 
+        values={formValues}
+        inputChange={inputChange}
+        checkboxChange={checkboxChange}
+        submit={submit}
+        disabled={disabled}
+        errors={formErrors}
+      />
+
       
-
-      <label>First Name     
-        <input 
-          name='name'
-          type='text'
-          maxLength='20'
-          // value='name'
-          placeholder='enter your First name'
-
-        />
-      </label>
-
-      <label>Last Name     
-        <input 
-          name='name'
-          type='text'
-          maxLength='20'
-          // value='name'
-          placeholder='enter your Last name'
-
-        />
-      </label>
-
-
-      <label>Email         
-        <input 
-          name='email'
-          type='email'
-          maxLength='30'
-          // value='email'
-          placeholder='enter your email'
-
-        />
-      </label>
-
-      <label>Password         
-        <input 
-          name='password'
-          type='password'
-          maxLength='30'
-          // value='email'
-          placeholder='enter your password'
-
-        />
-      </label>
-
-      <label>Do you agree to the terms and services         
-        <input 
-          name='terms'
-          type='checkbox'
-          // maxLength='20'
-          // value='email'
-          // placeholder='enter your email'
-
-        />
-      </label>
     
     </div>
   );
