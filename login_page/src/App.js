@@ -36,12 +36,14 @@ function App() {
 
   const postForm = newFriend => {
 
-    axios.post('http://localhost:4000/friends', newFriend)
+    axios.post('https://reqres.in/api/users', newFriend)
       .then(res => {
         setFriends(friends.concat(res.data))
+        console.log(res.data)
       })
       .catch(err => {
         debugger
+        console.log(err)
       })
       .finally(() => {
         setFormValues(initialFormValues)
@@ -82,8 +84,7 @@ function App() {
 
   const submit = () => {
     const filledForm = {
-      firstName: formValues.firstName.trim(),
-      lastName: formValues.lastName.trim(),
+      name: formValues.name.trim(),
       email: formValues.email.trim(),
       password: formValues.password.trim(),
       terms: formValues.terms.accepted,
