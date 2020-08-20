@@ -49,7 +49,7 @@ export default function Form(props){
                 name='name'
                 type='text'
                 maxLength='20'
-                value={values.firstName}
+                value={values.name}
                 onChange={onInputChange}
                 placeholder='enter your First name'
 

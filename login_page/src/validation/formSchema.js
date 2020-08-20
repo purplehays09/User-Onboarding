@@ -8,15 +8,15 @@ const formSchema = yup.object().shape({
     .required('Must include email address'),
   name: yup
     .string()
-    .min(3, 'First name must be at least 3 characters long')
-    .required('First name must be at least 3 characters long'),  
+    .min(3, 'Name must be at least 3 characters long')
+    .required('Name must be at least 3 characters long'),  
   password: yup
     .string()
     .min(8, 'Your password must be at least 8 characters')
     .required('Your password must be at least 8 characters'),
   terms: yup
-    .string()
-    .oneOf([false], 'You must accept the terms to proceed')
+    .boolean()
+    .oneOf([true], 'You must accept the terms to proceed')
     .required('You must accept the terms to proceed')
 })
 
