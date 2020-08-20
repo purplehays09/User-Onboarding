@@ -33,7 +33,7 @@ export default function Form(props){
             <div className='form-group submit'>
                 <h2>Add a Friend</h2>
         
-                <button disabled={disabled}>submit</button>
+                <button id='sumbit' disabled={disabled}>submit</button>
         
                 <div className='errors'>
                     <div>{errors.name}</div>
